@@ -33,30 +33,10 @@ var getAllStats = function() {
     return monster + player;
 }
 
-// Function to display possible player attacks, damage dealt, and energy used
-var attackMonster = function(monsterHP) {
-    var attacks = "Enter the number corresponding to the attack you want to use\n",
-        selectedAttack = -1;
-    for (var i=0; i < playerAttacks.length; i++) {
-        attacks = attacks + "\n" + i + " - " + playerAttacks[i] + " - Damage: " + playerAttacksDamage[i] + " - Energy Used: " + playerAttacksEnergy[i];        
-    }
-    selectedAttack = parseInt(prompt(attacks));
-
-    if (playerEnergy >= playerAttacksEnergy[selectedAttack]) {
-        // Player has enough energy to perform selected attack
-        monsterHP -= playerAttacksDamage[selectedAttack];
-        playerEnergy -= playerAttacksEnergy[selectedAttack];
-    } else {
-        // Player does not have enough energy to perform selected attack
-    }
-
-    return monsterHP;
-}
-
 // Function to generate new monster
 var getNewMonster = function() {
     // Get new monster attributes
-    currentMonster = getMonsterData(getRandomInt(0, (monsterArray.length - 1)));
+    currentMonster = getMonsterData(getRandomInt(0, monsterArray.length - 1));
     currentMonsterHP = currentMonster.hp;
 
     // Ask if player will fight or run away
@@ -72,12 +52,12 @@ var getRandomInt = function(min, max) {
     return random;
 }
 
-
 // Function to fight monster
 var fightMonster = function() {
     var monsterName = currentMonster.name,
         monsterAttacks = currentMonster.attacks,
-        isAttacking = true;
+        isAttacking = true,
+        killsPlayer = false;
 
     while(currentMonsterHP > 0) {
         console.log(getAllStats());
@@ -94,6 +74,7 @@ var fightMonster = function() {
             }
         } else {
             // Regenerating player
+            regeneratePlayer();
         }
 
         if (currentMonsterHP <= 0) {
@@ -101,8 +82,87 @@ var fightMonster = function() {
             playerWins++;
             currentMonsterHP = 0;
             console.log("The " + currentMonster.name + " is defeated!");
+        } else {
+            // Monster attacks player
+            killsPlayer = monsterAttack();
+            if (killsPlayer) {
+                break;
+            }
         }
     }
+}
+
+// Function to display possible player attacks, damage dealt, and energy used
+var attackMonster = function(monsterHP) {
+    var attacks = "Enter the number corresponding to the attack you want to use\n",
+        selectedAttack = -1
+        attackString = "";
+    for (var i=0; i < playerAttacks.length; i++) {
+        attacks = attacks + "\n" + i + " - " + playerAttacks[i] + " - Damage: " + playerAttacksDamage[i] + " - Energy Used: " + playerAttacksEnergy[i];        
+    }
+    selectedAttack = parseInt(prompt(attacks));
+
+    if (playerEnergy >= playerAttacksEnergy[selectedAttack]) {
+        // Player has enough energy to perform selected attack
+        attackString = "You attack using " + playerAttacks[selectedAttack] + " dealing " + playerAttacksDamage[selectedAttack] + " damage!";
+        monsterHP -= playerAttacksDamage[selectedAttack];
+        playerEnergy -= playerAttacksEnergy[selectedAttack];
+    } else {
+        // Player does not have enough energy to perform selected attack
+        attackString = "You do not have enough energy to use " + playerAttacks[selectedAttack];
+    }
+
+    alert(attackString);
+    console.log(attackString);
+
+    return monsterHP;
+}
+
+// Function to regenerate player statistics
+var regeneratePlayer = function() {
+    var regens = "Enter the number corresponding to the regeneration you want to use\n",
+        selectedRegen = -1,
+        regenString = "";
+    for (var i=0; i < playerRegeneration.length; i++) {
+        regens = regens + "\n" + i + " - " + playerRegeneration[i] + " - Amount Restored: " + playerRegenerationAmounts[i];        
+    }
+
+    selectedRegen = parseInt(prompt(regens));
+
+    switch (selectedRegen) {
+        case 0:
+            // Regenerate Health
+            playerHP += playerRegenerationAmounts[selectedRegen];
+            regenString = "Your HP has been restored by " + playerRegenerationAmounts[selectedRegen] + ". Your total HP is " + playerHP;
+            alert(regenString);
+            console.log(regenString);
+            break;
+        case 1:
+            // Regenerate Energy
+            playerEnergy += playerRegenerationAmounts[selectedRegen];
+            regenString = "Your Energy has been restored by " + playerRegenerationAmounts[selectedRegen] + ". Your total Energy is " + playerEnergy;
+            alert(regenString);
+            console.log(regenString);
+            break;
+    }
+}
+
+// Function to have monster attack player
+var monsterAttack = function() {
+    var killsPlayer = false,
+        attackType = getRandomInt(0, currentMonster.attacks.length - 1),
+        attackString = "\nThe " + currentMonster.name + " uses attack " + currentMonster.attacks[attackType] + " dealing "+ currentMonster.damage[attackType] + " damage!\n";
+
+    alert(attackString);
+    console.log(attackString);
+    playerHP -= currentMonster.damage[attackType];
+
+    if (playerHP <= 0) {
+        // Attack kills player
+        killsPlayer = true;
+    }
+
+    return killsPlayer;
 }
 
 console.log("Welcome to the Monster Battle Arena\nHere, you will be fighting monsters until you run away or die!");
@@ -123,6 +183,7 @@ while(playerHP > 0) {
 if (playerHP <= 0) {
     // Player died
     playerHP = 0;
+    alert("You have been killed by the " + currentMonster.name + ". Game Over!");
     console.log("The " + currentMonster.name + " kicked your butt!");
 }
 
