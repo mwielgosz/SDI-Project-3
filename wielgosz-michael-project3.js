@@ -7,16 +7,17 @@
 
 // Global variables
 var playerHP = 100,
-    playerEnergy = 100,
-    playerAttacks = ["Punch", "Sword Stab", "Sword Slash", "Fire Magic", "Water Magic"], // Names
-    playerAttacksDamage = [1, 5, 7, 10, 10], // Damage
-    playerAttacksEnergy = [5, 10, 15, 20, 20], // Required Energy
+    playerEnergy = 150,
+    playerAttacks = ["Punch", "Sword Stab", "Sword Slash", "Flame Jet", "Lightning"], // Names
+    playerAttacksDamage = [5, 10, 15, 20, 25], // Damage
+    playerAttacksEnergy = [0, 15, 10, 25, 30], // Required Energy
     playerRegeneration = ["Health", "Energy"], // Names
     playerRegenerationAmounts = [25, 50], // Amount replenished
     playerWins = 0,
     monsterArray = monsterData.monsters,
     currentMonsterHP = 0,
-    currentMonster = [];
+    currentMonster = [],
+    randomizedMonster = [];
 
 // Function to retrieve next monster's data
 var getMonsterData = function(monsterIndex) {
@@ -34,9 +35,9 @@ var getAllStats = function() {
 }
 
 // Function to generate new monster
-var getNewMonster = function() {
+var getNewMonster = function(randomMonster) {
+    currentMonster = randomizedMonster;
     // Get new monster attributes
-    currentMonster = getMonsterData(getRandomInt(0, monsterArray.length - 1));
     currentMonsterHP = currentMonster.hp;
 
     // Ask if player will fight or run away
@@ -53,11 +54,11 @@ var getRandomInt = function(min, max) {
 }
 
 // Function to fight monster
-var fightMonster = function() {
-    var monsterName = currentMonster.name,
-        monsterAttacks = currentMonster.attacks,
+var fightMonster = function(monsterName) {
+    var monsterAttacks = currentMonster.attacks,
         isAttacking = true,
-        killsPlayer = false;
+        isDead = false,
+        monsterString = "";
 
     while(currentMonsterHP > 0) {
         console.log(getAllStats());
@@ -81,10 +82,12 @@ var fightMonster = function() {
             // Monster died
             playerWins++;
             currentMonsterHP = 0;
-            console.log("The " + currentMonster.name + " is defeated!");
+            monsterString = "The " + currentMonster.name + " is defeated!";
+            alert(monsterString);
+            console.log(monsterString);
         } else {
             // Monster attacks player
-            killsPlayer = monsterAttack();
+            killsPlayer = monsterAttack(isDead);
             if (killsPlayer) {
                 break;
             }
@@ -148,9 +151,8 @@ var regeneratePlayer = function() {
 }
 
 // Function to have monster attack player
-var monsterAttack = function() {
-    var killsPlayer = false,
-        attackType = getRandomInt(0, currentMonster.attacks.length - 1),
+var monsterAttack = function(killsPlayer) {
+    var attackType = getRandomInt(0, currentMonster.attacks.length - 1),
         attackString = "\nThe " + currentMonster.name + " uses attack " + currentMonster.attacks[attackType] + " dealing "+ currentMonster.damage[attackType] + " damage!\n";
 
     alert(attackString);
@@ -169,9 +171,10 @@ console.log("Welcome to the Monster Battle Arena\nHere, you will be fighting mon
 
 // Game loops while player is alive
 while(playerHP > 0) {
-    if (getNewMonster()) {
+    randomizedMonster = getMonsterData(getRandomInt(0, monsterArray.length - 1))
+    if (getNewMonster(randomizedMonster)) {
         // Player decides to accept monster fight
-        fightMonster();
+        fightMonster(currentMonster.name);
     } else {
         // Player decides to run away, ending game
         console.log("Running away from " + currentMonster.name + "!");

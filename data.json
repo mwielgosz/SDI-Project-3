@@ -23,6 +23,54 @@ var monsterData = {
             "hp": 40,
             "attacks": ["Tail Whip", "Water Jet", "Whirlpool"],
             "damage": [5, 15, 20]
+        },
+        {
+            "name": "Skeleton",
+            "hp": 15,
+            "attacks": ["Jab", "Bone Slap", "Leg Smash", "Skull Bash", "Undead Magic"],
+            "damage": [2, 5, 10, 15, 30]
+        },
+        {
+            "name": "Creeper",
+            "hp": 25,
+            "attacks": ["Backstab", "Sniper Shot", "Mini Explosion", "Mega Explosion"],
+            "damage": [10, 15, 20, 30]
+        },
+        {
+            "name": "Weakling",
+            "hp": 10,
+            "attacks": ["Whimper", "Stare", "Smack", "Backhand", "Punch"],
+            "damage": [-5, 0, 5, 6, 8]
+        },
+        {
+            "name": "Undead Clicker",
+            "hp": 60,
+            "attacks": ["Clawed Haymaker", "Infected Puss", "Acid Spray", "Liquify", "Radiation", "Boneshatter"],
+            "damage": [8, 15, 18, 20, 26, 35]
+        },
+        {
+            "name": "Shadow Walker",
+            "hp": 30,
+            "attacks": ["Death Whisper", "Death Glare", "Ultimate Darkness"],
+            "damage": [10, 20, 30]
+        },
+        {
+            "name": "Dire Wolf",
+            "hp": 35,
+            "attacks": ["Howl", "Snarl", "Bite", "Ravaged Bite", "Lock Jaw", "Gnarled Fang"],
+            "damage": [3, 4, 6, 10, 15, 17]
+        },
+        {
+            "name": "Ravaged Lion",
+            "hp": 25,
+            "attacks": ["Razor Claw", "Haymaker Gash", "Feral Fang", "Strike Force", "Death Choke"],
+            "damage": [7, 12, 17, 20, 25]
+        },
+        {
+            "name": "Dark Mage",
+            "hp": 55,
+            "attacks": ["Lightning Strike", "Flaming Tsunami"],
+            "damage": [30, 40]
         }
     ]
 };
