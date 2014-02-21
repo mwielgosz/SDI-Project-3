@@ -10,7 +10,7 @@ var playerHP = 100,
     playerEnergy = 150,
     playerAttacks = ["Punch", "Sword Stab", "Sword Slash", "Flame Jet", "Lightning"], // Names
     playerAttacksDamage = [5, 10, 15, 20, 25], // Damage
-    playerAttacksEnergy = [0, 15, 10, 25, 30], // Required Energy
+    playerAttacksEnergy = [10, 15, 20, 25, 30], // Required Energy
     playerRegeneration = ["Health", "Energy"], // Names
     playerRegenerationAmounts = [25, 50], // Amount replenished
     playerWins = 0,
@@ -24,10 +24,17 @@ var getJSON = function() {
     var monsters = [];
 
     for (var key in monsterData.monsters) {
-            monsters.push(monsterData.monsters[key])
+        monsters.push(monsterData.monsters[key])
     }
 
     return monsters;
+}
+
+// Function to randomly generate an integer
+var getRandomInt = function(min, max) {
+    var random = Math.floor(Math.random() * (max - min + 1)) + min;
+
+    return random;
 }
 
 // Function to retrieve next monster's data
@@ -57,24 +64,19 @@ var getNewMonster = function(randomMonster) {
     return isFighting;
 }
 
-// Function to randomly generate an integer
-var getRandomInt = function(min, max) {
-    var random = Math.floor(Math.random() * (max - min + 1)) + min;
-
-    return random;
-}
-
 // Function to fight monster
 var fightMonster = function(monsterName) {
     var monsterAttacks = currentMonster.attacks,
         isAttacking = true,
         isDead = false,
-        monsterString = "";
+        monsterString = ""
+        stats = "";
 
     while(currentMonsterHP > 0) {
-        console.log(getAllStats(currentMonster));
+        stats = getAllStats(currentMonster);
+        console.log(stats);
 
-        isAttacking = confirm(getAllStats(currentMonster) + "\nClick 'OK' to attack\nClick 'Cancel' to regenerate");
+        isAttacking = confirm(stats + "\nClick 'OK' to attack\nClick 'Cancel' to regenerate");
         if (isAttacking) {
             // Attacking monster
             if (playerEnergy > 0) {
@@ -111,6 +113,7 @@ var attackMonster = function(monsterHP) {
     var attacks = "Enter the number corresponding to the attack you want to use\n",
         selectedAttack = -1
         attackString = "";
+
     for (var i=0; i < playerAttacks.length; i++) {
         attacks = attacks + "\n" + i + " - " + playerAttacks[i] + " - Damage: " + playerAttacksDamage[i] + " - Energy Used: " + playerAttacksEnergy[i];        
     }
@@ -137,6 +140,7 @@ var regeneratePlayer = function() {
     var regens = "Enter the number corresponding to the regeneration you want to use\n",
         selectedRegen = -1,
         regenString = "";
+
     for (var i=0; i < playerRegeneration.length; i++) {
         regens = regens + "\n" + i + " - " + playerRegeneration[i] + " - Amount Restored: " + playerRegenerationAmounts[i];        
     }
@@ -185,7 +189,7 @@ console.log("Welcome to the Monster Battle Arena\nHere, you will be fighting mon
 
 // Game loops while player is alive
 while(playerHP > 0) {
-    randomizedMonster = getMonsterData(getRandomInt(0, monsterArray.length - 1))
+    randomizedMonster = getMonsterData(getRandomInt(0, monsterArray.length - 1));
     if (getNewMonster(randomizedMonster)) {
         // Player decides to accept monster fight
         fightMonster(currentMonster.name);
@@ -197,12 +201,9 @@ while(playerHP > 0) {
     console.log("\nYou have defeated " + playerWins + " monsters!");
 }
 
-if (playerHP <= 0) {
-    // Player died
-    playerHP = 0;
-    alert("You have been killed by the " + currentMonster.name + ". Game Over!");
-    console.log("The " + currentMonster.name + " kicked your butt!");
-}
+// Player died
+alert("You have been killed by the " + currentMonster.name + ". Game Over!");
+console.log("The " + currentMonster.name + " kicked your butt!");
 
 // Game Over
 console.log("Game Over!");
