@@ -14,10 +14,21 @@ var playerHP = 100,
     playerRegeneration = ["Health", "Energy"], // Names
     playerRegenerationAmounts = [25, 50], // Amount replenished
     playerWins = 0,
-    monsterArray = monsterData.monsters,
+    monsterArray = [],
     currentMonsterHP = 0,
     currentMonster = [],
     randomizedMonster = [];
+
+// Function to get all monster data
+var getJSON = function() {
+    var monsters = [];
+
+    for (var key in monsterData.monsters) {
+            monsters.push(monsterData.monsters[key])
+    }
+
+    return monsters;
+}
 
 // Function to retrieve next monster's data
 var getMonsterData = function(monsterIndex) {
@@ -27,8 +38,8 @@ var getMonsterData = function(monsterIndex) {
 }
 
 // Function to display player and monster stats
-var getAllStats = function() {
-    var monster = "\nYou are fighting a " + currentMonster.name + "!\nHP: " + currentMonsterHP + "\n\n";
+var getAllStats = function(monsterArray) {
+    var monster = "\nYou are fighting a " + monsterArray.name + "!\nHP: " + currentMonsterHP + "\n\n";
     var player = "Your Statistics:\nHP: " + playerHP + "\nEnergy: " + playerEnergy + "\n";
     
     return monster + player;
@@ -41,7 +52,7 @@ var getNewMonster = function(randomMonster) {
     currentMonsterHP = currentMonster.hp;
 
     // Ask if player will fight or run away
-    var isFighting = confirm(getAllStats() + "\nWill you fight or run away?");
+    var isFighting = confirm(getAllStats(currentMonster) + "\nWill you fight or run away?");
     
     return isFighting;
 }
@@ -61,9 +72,9 @@ var fightMonster = function(monsterName) {
         monsterString = "";
 
     while(currentMonsterHP > 0) {
-        console.log(getAllStats());
+        console.log(getAllStats(currentMonster));
 
-        isAttacking = confirm(getAllStats() + "\nClick 'OK' to attack\nClick 'Cancel' to regenerate");
+        isAttacking = confirm(getAllStats(currentMonster) + "\nClick 'OK' to attack\nClick 'Cancel' to regenerate");
         if (isAttacking) {
             // Attacking monster
             if (playerEnergy > 0) {
@@ -166,6 +177,9 @@ var monsterAttack = function(killsPlayer) {
 
     return killsPlayer;
 }
+
+// Get all monster data
+monsterArray = getJSON();
 
 console.log("Welcome to the Monster Battle Arena\nHere, you will be fighting monsters until you run away or die!");
 
